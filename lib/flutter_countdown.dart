@@ -5,18 +5,18 @@ import 'package:flutter/cupertino.dart';
 
 class _Countdown extends AnimatedWidget {
   final Animation<int> animation;
-  final String Function(int number) renderLabel;
-  final TextStyle textStyle;
+  final String Function(int number)? renderLabel;
+  final TextStyle? textStyle;
 
   _Countdown(
-      {Key key, this.animation, this.renderLabel, this.textStyle})
+      {Key? key, required this.animation, this.renderLabel, this.textStyle})
       : super(key: key, listenable: animation);
 
   @override
   build(BuildContext context) {
     int count = animation.value;
     return Text(
-      renderLabel(count),
+      renderLabel!(count),
       style: textStyle,
       textDirection: TextDirection.ltr,
     );
@@ -24,16 +24,16 @@ class _Countdown extends AnimatedWidget {
 }
 
 class CountDown extends StatefulWidget {
-  final int beginCount;
-  final int endCount;
+  final int? beginCount;
+  final int? endCount;
   // renderSemanticLabel is deprecated and shouldn't be used.
   // you can use renderLabel
-  final String Function(int number) renderSemanticLabel;
-  final String Function(int number) renderLabel;
-  final void Function(AnimationController refs) refs;
-  final Future<bool> Function(AnimationController ctr) onPress;
-  final AnimationStatusListener statusListener;
-  final TextStyle textStyle;
+  final String Function(int number)? renderSemanticLabel;
+  final String Function(int number)? renderLabel;
+  final void Function(AnimationController? refs)? refs;
+  final Future<bool> Function(AnimationController? ctr)? onPress;
+  final AnimationStatusListener? statusListener;
+  final TextStyle? textStyle;
 
   CountDown(
       {this.beginCount,
@@ -50,7 +50,7 @@ class CountDown extends StatefulWidget {
 }
 
 class CounDownState extends State<CountDown> with TickerProviderStateMixin {
-  AnimationController _controller;
+  AnimationController? _controller;
 
   @override
   void initState() {
@@ -58,33 +58,33 @@ class CounDownState extends State<CountDown> with TickerProviderStateMixin {
 
     _controller = AnimationController(
       vsync: this,
-      duration: new Duration(seconds: widget.beginCount),
+      duration: new Duration(seconds: widget.beginCount!),
     );
 
-    _controller.addStatusListener((state) {
+    _controller!.addStatusListener((state) {
       if (state == AnimationStatus.completed) {
-        _controller.reset();
+        _controller!.reset();
       }
       if (widget.statusListener != null) {
-        widget.statusListener(state);
+        widget.statusListener!(state);
       }
     });
 
     if (widget.statusListener != null) {
-      widget.refs(_controller);
+      widget.refs!(_controller);
     }
   }
 
-  _beginCountIfNeed(AnimationController ctr) async {
-    bool isNeedCount = await widget.onPress(ctr);
+  _beginCountIfNeed(AnimationController? ctr) async {
+    bool isNeedCount = await widget.onPress!(ctr);
     if (isNeedCount) {
-      _controller.forward(from: 0.0);
+      _controller!.forward(from: 0.0);
     }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller!.dispose();
     super.dispose();
   }
 
@@ -95,15 +95,15 @@ class CounDownState extends State<CountDown> with TickerProviderStateMixin {
       child: _Countdown(
         renderLabel: (count) {
           if (widget.renderLabel != null) {
-            return widget.renderLabel(count);
+            return widget.renderLabel!(count);
           }
-          return widget.renderSemanticLabel(count);
+          return widget.renderSemanticLabel!(count);
         },
         textStyle: widget.textStyle,
         animation: new StepTween(
           begin: widget.beginCount,
           end: widget.endCount,
-        ).animate(_controller),
+        ).animate(_controller!),
       ),
     );
   }

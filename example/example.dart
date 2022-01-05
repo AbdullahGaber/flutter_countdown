@@ -14,7 +14,7 @@ class Example extends StatefulWidget {
 }
 
 class _ExampleState extends State<Example> {
-  AnimationController _controller;
+  AnimationController? _controller;
 
   _onPressCountDown(AnimationController ctr) {
     if (ctr.isAnimating) {
@@ -44,7 +44,7 @@ class _ExampleState extends State<Example> {
             }
             return '$count';
           },
-          onPress: (ctr) => _onPressCountDown(ctr),
+          onPress: (ctr) => _onPressCountDown(ctr!),
           statusListener: (state) => _countDownStatusListener(state),
           refs: (ctr) { _controller = ctr; },
         )
